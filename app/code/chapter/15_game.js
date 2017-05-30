@@ -295,7 +295,7 @@ Level.prototype.playerTouched = function(type, actor) {
     }
   }
 };
-
+//游戏操控方向对应键盘标号
 var arrowCodes = {37: "left", 38: "up", 39: "right"};
 
 function trackKeys(codes) {
@@ -377,3 +377,26 @@ document.onkeydown=function(event){
                      alert("如要继续游戏，请按下确定");
                        }
             };
+
+
+
+document.onkeyup = function (event) {
+    var e = event || window.event;
+    var keyCode = e.keyCode || e.which;
+    switch (keyCode) {
+        case 37:
+            $("#btnLeft").click();
+            break;
+        case 38:
+            $("#btnUp").click();
+            break;
+        case 39:
+            $("#btnRight").click();
+            break;
+        default:
+            break;
+    }
+};
+
+
+
