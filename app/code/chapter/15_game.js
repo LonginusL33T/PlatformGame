@@ -399,4 +399,60 @@ document.onkeyup = function (event) {
 };
 
 
+//wcc
+function arrayToList(arr){
+    var list = null;
+    for(var i = arr.length-1;i>=0;i--){
+        list =
+            {value:arr[i],
+                rest:list}
+    }
+    return list;
+}
+
+function listToArray(list){
+    var arr = [];
+    for(var i = list;i;i = i.rest){
+        arr.push(i.value);
+    }
+    return arr;
+}
+
+function prepend(element,list){
+    return {value:element,rest:list}
+}
+
+function nth(x,list){
+    if(x==0){
+        return list.value;
+    }
+    else if(!list){
+        return undefined;
+    }
+    else{
+        return nth(x-1,list.rest);
+    }
+}
+function sum(stepArray) {
+    var gross = 0;
+    for (var i = 0; i < stepArray.length; i++)
+        gross += stepArray[i];
+    return gross;
+}
+
+function range(start, end, step) {
+    if (step == null)
+        step = 1;
+    var stepArray = [];
+    if (step <= 0) {
+        for (var i = start; i >= end; i += step)
+            stepArray.push(i);
+    } else {
+        for (var i = start; i <= end; i += step)
+            stepArray.push(i);
+    }
+    return stepArray;
+}
+
+
 
