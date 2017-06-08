@@ -398,6 +398,86 @@ document.onkeyup = function (event) {
     }
 };
 
+//access
+
+//查询
+var conn = new ActiveXObject("ADODB.Connection");
+conn.Open("DBQ=D://Software//JS//PlatformGame//app//PlatformGame.mdb;DRIVER={Microsoft Access Driver (*.mdb)};");
+var rs = new ActiveXObject("ADODB.Recordset");
+var sql="select * from User";
+rs.open(sql, conn);
+var html="";
+while(!rs.EOF)
+{
+    html=html+rs.Fields("ID")+" "+rs.Fields("name")+" "+rs.Fields("password");
+    rs.moveNext();
+}
+document.write(html);
+rs.close();
+rs = null;
+conn.close();
+conn = null;
+
+
+
+
+
+
+ //增添
+function addUser(name,password)
+{
+    //用 JavaScript 写服务器端连接数据库的代码示例
+    var conn = new ActiveXObject("ADODB.Connection");
+    conn.Open("DBQ=D://Software//JS//PlatformGame//app//PlatformGame.mdb;DRIVER={Microsoft Access Driver (*.mdb)};");
+    var sql="insert into User(name,password) values("+name+","+password+")";
+    try{
+        conn.execute(sql);
+        alert("添加成功");
+    }
+    catch(e){
+        document.write(e.description);
+        alert("添加失败~~~");
+    }
+    conn.close();
+}
+
+//删除
+function del(id)
+{
+    var conn = new ActiveXObject("ADODB.Connection");
+    conn.Open("DBQ=D://Software//JS//PlatformGame//app//PlatformGame.mdb;DRIVER={Microsoft Access Driver (*.mdb)};");
+    var sql="delete from  where Id=7";
+    conn.execute(sql);
+    conn.close();
+    conn = null;
+    alert("修改成功");
+}
+
+
+
+//修改
+function updateUser(name,mark)
+{
+    var conn = new ActiveXObject("ADODB.Connection");
+    conn.Open("DBQ=D://Software//JS//PlatformGame//app//PlatformGame.mdb;DRIVER={Microsoft Access Driver (*.mdb)};");
+    var rs = new ActiveXObject("ADODB.Recordset");
+    var sql="update  User set mark='" + mark + "' where name=" + name + "";
+    conn.execute(sql);
+    conn.close();
+    conn = null;
+    alert("修改成功");
+}
+
+//access
+
+
+
+
+
+
+
+
+
 
 //wcc
 function arrayToList(arr){
