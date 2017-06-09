@@ -43,7 +43,7 @@
                         <a href="javascript:;" id="register_btn" class="">创建一个账户</a>
                     </div>  
                     <div class="form-group">  
-                        <input type="submit" class="btn btn-success pull-right" onclick="sub()" id="login_btn" value="登陆 "/>
+                        <input type="submit" class="btn btn-success pull-right"  onclick="" id="login_btn" value="登陆 "/>
                     </div>  
                 </div>  
             </form>  
@@ -78,7 +78,7 @@
         </div>  
         </div>  
     <script type="text/javascript" >
-
+        //var lusername = document.getElementById("lusername").value;
 
 
 
@@ -144,9 +144,15 @@
             $("#login_btn").click(function() {
                 $("#register_form").css("display", "none");
                 $("#login_form").css("display", "block");
-                window.location.href="index.html";
+                var lusername = document.getElementById("lusername").value;
+                window.location.href="index.html?username="+lusername+"";
+                //alert(lusername);
             });
         });
+
+
+
+
 
         //wcc
         function sub(){

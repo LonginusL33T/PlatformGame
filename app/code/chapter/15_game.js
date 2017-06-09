@@ -9,6 +9,10 @@ var simpleLevelPlan = [
   "      xxxxxxxxxxxxxx  ",
   "                      "
 ];
+//初始积分为0
+var mark = 0;
+//var lusername = document.getElementById("lusername").value;
+var lusername;
 
 function Level(plan) {
   this.width = plan[0].length;
@@ -78,7 +82,7 @@ function Lava(pos, ch) {
   }
 }
 Lava.prototype.type = "lava";
-
+//硬币
 function Coin(pos) {
   this.basePos = this.pos = pos.plus(new Vector(0.2, 0.1));
   this.size = new Vector(0.6, 0.6);
@@ -278,14 +282,17 @@ Player.prototype.act = function(step, level, keys) {
     this.size.y -= step;
   }
 };
-
+//玩家碰撞事件
 Level.prototype.playerTouched = function(type, actor) {
   if (type == "lava" && this.status == null) {
     this.status = "lost";
     this.finishDelay = 1;
   } else if (type == "coin") {
+      mark = mark + 1;
+      updateUser(lusername,mark);
     this.actors = this.actors.filter(function(other) {
       return other != actor;
+
     });
     if (!this.actors.some(function(actor) {
       return actor.type == "coin";
@@ -343,7 +350,8 @@ function runLevel(level, Display, andThen) {
   });
 }
 
-function runGame(plans, Display) {
+function runGame(plans, Display,x) {
+    lusername = x;
   //初始生命设为3
     var life = 3;
   function startLevel(n) {
@@ -369,6 +377,8 @@ function runGame(plans, Display) {
   }
   startLevel(0);
 }
+
+
 
 
 document.onkeydown=function(event){
@@ -401,23 +411,23 @@ document.onkeyup = function (event) {
 //access
 
 //查询
-var conn = new ActiveXObject("ADODB.Connection");
-conn.Open("DBQ=D://Software//JS//PlatformGame//app//PlatformGame.mdb;DRIVER={Microsoft Access Driver (*.mdb)};");
-var rs = new ActiveXObject("ADODB.Recordset");
-var sql="select * from User";
-rs.open(sql, conn);
-var html="";
-while(!rs.EOF)
-{
-    html=html+rs.Fields("ID")+" "+rs.Fields("name")+" "+rs.Fields("password");
-    rs.moveNext();
+function queryUser() {
+    var conn = new ActiveXObject("ADODB.Connection");
+    conn.Open("DBQ=D://Software//JS//PlatformGame//app//PlatformGame.mdb;DRIVER={Microsoft Access Driver (*.mdb)};");
+    var rs = new ActiveXObject("ADODB.Recordset");
+    var sql = "select * from User";
+    rs.open(sql, conn);
+    var html = "";
+    while (!rs.EOF) {
+        html = html + rs.Fields("ID") + " " + rs.Fields("name") + " " + rs.Fields("password") + " " + rs.Fields("mark");
+        rs.moveNext();
+    }
+    document.write(html);
+    rs.close();
+    rs = null;
+    conn.close();
+    conn = null;
 }
-document.write(html);
-rs.close();
-rs = null;
-conn.close();
-conn = null;
-
 
 
 
@@ -461,11 +471,35 @@ function updateUser(name,mark)
     var conn = new ActiveXObject("ADODB.Connection");
     conn.Open("DBQ=D://Software//JS//PlatformGame//app//PlatformGame.mdb;DRIVER={Microsoft Access Driver (*.mdb)};");
     var rs = new ActiveXObject("ADODB.Recordset");
-    var sql="update  User set mark='" + mark + "' where name=" + name + "";
+    var sql="update  User set mark='" + mark + "' where name='" + name + "'";
     conn.execute(sql);
     conn.close();
     conn = null;
-    alert("修改成功");
+    //alert("修改成功");
+}
+
+
+function displayMark()
+{
+    var conn = new ActiveXObject("ADODB.Connection");
+    conn.Open("DBQ=D://Software//JS//PlatformGame//app//PlatformGame.mdb;DRIVER={Microsoft Access Driver (*.mdb)};");
+    var rs = new ActiveXObject("ADODB.Recordset");
+    var sql="select * from User order by mark DESC";
+    rs.open(sql, conn);
+    var html="";
+    var i=1;
+    while(!rs.EOF)
+    {
+        html=html+"第"+i+"名"+" "+rs.Fields("name")+" "+rs.Fields("mark")+'<br>';
+        i = i + 1;
+        rs.moveNext();
+
+    }
+    document.write(html);
+    rs.close();
+    rs = null;
+    conn.close();
+    conn = null;
 }
 
 //access
@@ -479,171 +513,6 @@ function updateUser(name,mark)
 
 
 
-//wcc
-function arrayToList(arr){
-    var list = null;
-    for(var i = arr.length-1;i>=0;i--){
-        list =
-            {value:arr[i],
-                rest:list}
-    }
-    return list;
-}
-
-function listToArray(list){
-    var arr = [];
-    for(var i = list;i;i = i.rest){
-        arr.push(i.value);
-    }
-    return arr;
-}
-
-function prepend(element,list){
-    return {value:element,rest:list}
-}
-
-function nth(x,list){
-    if(x==0){
-        return list.value;
-    }
-    else if(!list){
-        return undefined;
-    }
-    else{
-        return nth(x-1,list.rest);
-    }
-}
-function sum(stepArray) {
-    var gross = 0;
-    for (var i = 0; i < stepArray.length; i++)
-        gross += stepArray[i];
-    return gross;
-}
-
-function range(start, end, step) {
-    if (step == null)
-        step = 1;
-    var stepArray = [];
-    if (step <= 0) {
-        for (var i = start; i >= end; i += step)
-            stepArray.push(i);
-    } else {
-        for (var i = start; i <= end; i += step)
-            stepArray.push(i);
-    }
-    return stepArray;
-}
-
-function readStreamAsString(stream, callback) {
-    var content = "";
-    stream.on("data", function(chunk) {
-        content += chunk;
-    });
-    stream.on("end", function() {
-        callback(null, content);
-    });
-    stream.on("error", function(error) {
-        callback(error);
-    });
-}
-
-["text/plain", "text/html", "application/json"].forEach(function(type) {
-    http.request({
-        hostname: "eloquentjavascript.net",
-        path: "/author",
-        headers: {Accept: type}
-    }, function(response) {
-        if (response.statusCode != 200) {
-            console.error("Request for " + type + " failed: " + response.statusMessage);
-            return;
-        }
-        readStreamAsString(response, function(error, content) {
-            if (error) throw error;
-            console.log("Type " + type + ": " + content);
-        });
-    }).end();
-});
-
-
-
-function urlToPath(url) {
-    var path = require("url").parse(url).pathname;
-    var decoded = decodeURIComponent(path);
-    return "." + decoded.replace(/(\/|\\)\.\.(\/|\\|$)/g, "/");
-}
-
-methods.MKCOL = function(path, respond) {
-    fs.stat(path, function(error, stats) {
-        if (error && error.code == "ENOENT")
-            fs.mkdir(path, respondErrorOrNothing(respond));
-        else if (error)
-            respond(500, error.toString());
-        else if (stats.isDirectory())
-            respond(204);
-        else
-            respond(400, "File exists");
-    });
-};
-
-
-
-specialForms["do"] = function(args, env) {
-    var value = false;
-    args.forEach(function(arg) {
-        value = evaluate(arg, env);
-    });
-    return value;
-};
-
-specialForms["define"] = function(args, env) {
-    if (args.length != 2 || args[0].type != "word")
-        throw new SyntaxError("Bad use of define");
-    var value = evaluate(args[1], env);
-    env[args[0].name] = value;
-    return value;
-};
-
-var topEnv = Object.create(null);
-
-topEnv["true"] = true;
-topEnv["false"] = false;
-
-["+", "-", "*", "/", "==", "<", ">"].forEach(function(op) {
-    topEnv[op] = new Function("a, b", "return a " + op + " b;");
-});
-
-topEnv["print"] = function(value) {
-    console.log(value);
-    return value;
-};
-
-function run() {
-    var env = Object.create(topEnv);
-    var program = Array.prototype.slice
-        .call(arguments, 0).join("\n");
-    return evaluate(parse(program), env);
-}
-
-specialForms["fun"] = function(args, env) {
-    if (!args.length)
-        throw new SyntaxError("Functions need a body");
-    function name(expr) {
-        if (expr.type != "word")
-            throw new SyntaxError("Arg names must be words");
-        return expr.name;
-    }
-    var argNames = args.slice(0, args.length - 1).map(name);
-    var body = args[args.length - 1];
-
-    return function() {
-        if (arguments.length != argNames.length)
-            throw new TypeError("Wrong number of arguments");
-        var localEnv = Object.create(env);
-        for (var i = 0; i < arguments.length; i++)
-            localEnv[argNames[i]] = arguments[i];
-        return evaluate(body, localEnv);
-    };
-};
 
 
 
