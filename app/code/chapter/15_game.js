@@ -13,6 +13,7 @@ var simpleLevelPlan = [
 var mark = 0;
 //var lusername = document.getElementById("lusername").value;
 var lusername;
+var ddmark;
 
 function Level(plan) {
   this.width = plan[0].length;
@@ -289,7 +290,12 @@ Level.prototype.playerTouched = function(type, actor) {
     this.finishDelay = 1;
   } else if (type == "coin") {
       mark = mark + 1;
-      updateUser(lusername,mark);
+      var ccmark = queryUserMark(lusername);
+      //alert(ccmark);
+      if(mark>ccmark){
+          updateUser(lusername,mark);
+          //alert("1231231231231");
+      }
     this.actors = this.actors.filter(function(other) {
       return other != actor;
 
@@ -429,17 +435,36 @@ function queryUser() {
     conn = null;
 }
 
+//查询当前用户对应积分
+function queryUserMark(name) {
+    var conn = new ActiveXObject("ADODB.Connection");
+    conn.Open("DBQ=D://Software//JS//PlatformGame//app//PlatformGame.mdb;DRIVER={Microsoft Access Driver (*.mdb)};");
+    var rs = new ActiveXObject("ADODB.Recordset");
+    var sql = "select * from User where name='" + name + "'";
+    rs.open(sql, conn);
+    var cmark = "";
+    cmark = cmark + rs.Fields("mark");
+    //document.write(html);
+    rs.close();
+    rs = null;
+    conn.close();
+    conn = null;
+     //alert(cmark);
+
+     return cmark;
+}
+
 
 
 
 
  //增添
-function addUser(name,password)
+function addUser(name,password,mail)
 {
     //用 JavaScript 写服务器端连接数据库的代码示例
     var conn = new ActiveXObject("ADODB.Connection");
     conn.Open("DBQ=D://Software//JS//PlatformGame//app//PlatformGame.mdb;DRIVER={Microsoft Access Driver (*.mdb)};");
-    var sql="insert into User(name,password) values("+name+","+password+")";
+    var sql="insert into User(name,password,mail) values("+name+","+password+","+mail+")";
     try{
         conn.execute(sql);
         alert("添加成功");
@@ -484,13 +509,13 @@ function displayMark()
     var conn = new ActiveXObject("ADODB.Connection");
     conn.Open("DBQ=D://Software//JS//PlatformGame//app//PlatformGame.mdb;DRIVER={Microsoft Access Driver (*.mdb)};");
     var rs = new ActiveXObject("ADODB.Recordset");
-    var sql="select * from User order by mark DESC";
+    var sql="select * from User order by mark ASC";
     rs.open(sql, conn);
     var html="";
     var i=1;
     while(!rs.EOF)
     {
-        html=html+"第"+i+"名"+" "+rs.Fields("name")+" "+rs.Fields("mark")+'<br>';
+        html=html+"第"+i+"名"+"&nbsp;"+rs.Fields("name")+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+rs.Fields("mark")+"分"+'<br>';
         i = i + 1;
         rs.moveNext();
 
