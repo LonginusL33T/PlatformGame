@@ -33,7 +33,7 @@
                     </div>  
                     <div class="form-group">  
                             <i class="fa fa-lock fa-lg"></i>  
-                            <input class="form-control required" type="password" placeholder="密码" name="password" maxlength="8"/>
+                            <input class="form-control required" type="password" placeholder="密码" id="lpwd" name="password" maxlength="8"/>
                     </div>  
                     <div class="form-group">  
                         <label class="checkbox">  
@@ -43,7 +43,7 @@
                         <a href="javascript:;" id="register_btn" class="">创建一个账户</a>
                     </div>  
                     <div class="form-group">  
-                        <input type="submit" class="btn btn-success pull-right"  onclick="" id="login_btn" value="登陆 "/>
+                        <input type="button" class="btn btn-success pull-right"   id="login_btn" value="登陆 "/>
                     </div>  
                 </div>  
             </form>  
@@ -55,7 +55,7 @@
                 <div class="col-sm-9 col-md-9">  
                     <div class="form-group">  
                         <i class="fa fa-user fa-lg"></i>  
-                        <input class="form-control required" type="text" placeholder="用户名" id="username" name="username" autofocus="autofocus"/>
+                        <input class="form-control required" type="text" placeholder="用户名" id="rusername" name="username" autofocus="autofocus"/>
                     </div>  
                     <div class="form-group">  
                             <i class="fa fa-lock fa-lg"></i>  
@@ -67,10 +67,10 @@
                     </div>  
                     <div class="form-group">  
                             <i class="fa fa-envelope fa-lg"></i>  
-                            <input class="form-control eamil" type="text" placeholder="邮件" name="email"/>
+                            <input class="form-control eamil" type="text" id="rmail" placeholder="邮件" name="email"/>
                     </div>  
                     <div class="form-group">  
-                        <input type="submit" class="btn btn-success pull-right" onclick="addUser(username.value)" value="注册 "/>
+                        <input type="submit" class="btn btn-success pull-right" id="register" value="注册 "/>
                         <input type="submit" class="btn btn-info pull-left" id="back_btn" value="返回"/>
                     </div>  
                 </div>  
@@ -135,8 +135,19 @@
             $("#register_btn").click(function() {
                 $("#register_form").css("display", "block");
                 $("#login_form").css("display", "none");
-
             });
+
+
+            $("#register").click(function() {
+                var rusername = document.getElementById("rusername").value;
+                var rpassword = document.getElementById("register_password").value;
+                var rmail = document.getElementById("rmail").value;
+                if(verifyrUser(rusername)==true){
+                    addUser(rusername,rpassword,rmail);
+                }
+            });
+
+
             $("#back_btn").click(function() {
                 $("#register_form").css("display", "none");
                 $("#login_form").css("display", "block");
@@ -144,25 +155,17 @@
             $("#login_btn").click(function() {
                 $("#register_form").css("display", "none");
                 $("#login_form").css("display", "block");
+
                 var lusername = document.getElementById("lusername").value;
-                window.location.href="index.html?username="+lusername+"";
-                //alert(lusername);
+                var lpwd = document.getElementById("lpwd").value;
+                if(verifyUser(lusername,lpwd)==true){
+                    //alert('BEFORE JUMP');
+                    window.location.href="index.html?username="+lusername;
+                }
+
             });
         });
 
-
-
-
-
-        //wcc
-        function sub(){
-            var content = document.getElementById("username");
-
-            addUser(4,content.value);
-
-            alert(content.value);
-        }
-        //wcc
 
 
 

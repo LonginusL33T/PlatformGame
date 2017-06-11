@@ -458,13 +458,15 @@ function queryUserMark(name) {
 
 
 
- //增添
+ //增添用户
 function addUser(name,password,mail)
 {
-    //用 JavaScript 写服务器端连接数据库的代码示例
+
+    alert(mail);
     var conn = new ActiveXObject("ADODB.Connection");
     conn.Open("DBQ=D://Software//JS//PlatformGame//app//PlatformGame.mdb;DRIVER={Microsoft Access Driver (*.mdb)};");
     var sql="insert into User(name,password,mail) values("+name+","+password+","+mail+")";
+    alert("asdfasdfasdfasdf");
     try{
         conn.execute(sql);
         alert("添加成功");
@@ -475,6 +477,53 @@ function addUser(name,password,mail)
     }
     conn.close();
 }
+
+//登陆验证
+function verifyUser(name,password)
+{
+    //alert(name);
+    //alert(password);
+    //用 JavaScript 写服务器端连接数据库的代码示例
+    var conn = new ActiveXObject("ADODB.Connection");
+    conn.Open("DBQ=D://Software//JS//PlatformGame//app//PlatformGame.mdb;DRIVER={Microsoft Access Driver (*.mdb)};");
+    var rs = new ActiveXObject("ADODB.Recordset");
+    var sql="select * from User where name='" + name + "' and password='" + password + "'";
+    rs.open(sql, conn);
+    //if(rs==null){
+       // alert("用户名为空");
+        //return false;
+    //}
+     if(rs.Fields("password")==password){
+        return true;
+    }
+    else{
+        alert("用户名或密码错误");
+        return false;
+    }
+}
+
+
+
+//注册验证
+function verifyrUser(name)
+{
+
+    var conn = new ActiveXObject("ADODB.Connection");
+    conn.Open("DBQ=D://Software//JS//PlatformGame//app//PlatformGame.mdb;DRIVER={Microsoft Access Driver (*.mdb)};");
+    var rs = new ActiveXObject("ADODB.Recordset");
+    var sql="select * from User where name='" + name + "'";
+    rs.open(sql, conn);
+
+    if(rs.Fields("name")!==name){
+        return true;
+    }
+    else{
+        alert("该用户已存在");
+        return false;
+    }
+}
+
+
 
 //删除
 function del(id)
