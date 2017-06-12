@@ -15,6 +15,9 @@ var mark = 0;
 var lusername;
 var ddmark;
 
+
+
+
 function Level(plan) {
   this.width = plan[0].length;
   this.height = plan.length;
@@ -290,11 +293,10 @@ Level.prototype.playerTouched = function(type, actor) {
     this.finishDelay = 1;
   } else if (type == "coin") {
       mark = mark + 1;
+      document.getElementById('b').innerHTML = mark;
       var ccmark = queryUserMark(lusername);
-      //alert(ccmark);
       if(mark>ccmark){
           updateUser(lusername,mark);
-          //alert("1231231231231");
       }
     this.actors = this.actors.filter(function(other) {
       return other != actor;
@@ -308,6 +310,7 @@ Level.prototype.playerTouched = function(type, actor) {
     }
   }
 };
+
 //游戏操控方向对应键盘标号
 var arrowCodes = {37: "left", 38: "up", 39: "right"};
 
@@ -372,6 +375,8 @@ function runGame(plans, Display,x) {
           } else {
               //生命为0时直接从起始关开始
               alert("游戏结束！");
+              //alert(mark);
+              mark = 0;
               startLevel(0);
           }
       }
@@ -461,15 +466,12 @@ function queryUserMark(name) {
  //增添用户
 function addUser(name,password,mail)
 {
-
-    alert(mail);
     var conn = new ActiveXObject("ADODB.Connection");
     conn.Open("DBQ=D://Software//JS//PlatformGame//app//PlatformGame.mdb;DRIVER={Microsoft Access Driver (*.mdb)};");
-    var sql="insert into User(name,password,mail) values("+name+","+password+","+mail+")";
-    alert("asdfasdfasdfasdf");
+    var sql="insert into User(name,password,mail) values('"+name+"','"+password+"','"+mail+"')";
     try{
         conn.execute(sql);
-        alert("添加成功");
+        alert("注册成功");
     }
     catch(e){
         document.write(e.description);
@@ -481,18 +483,11 @@ function addUser(name,password,mail)
 //登陆验证
 function verifyUser(name,password)
 {
-    //alert(name);
-    //alert(password);
-    //用 JavaScript 写服务器端连接数据库的代码示例
     var conn = new ActiveXObject("ADODB.Connection");
     conn.Open("DBQ=D://Software//JS//PlatformGame//app//PlatformGame.mdb;DRIVER={Microsoft Access Driver (*.mdb)};");
     var rs = new ActiveXObject("ADODB.Recordset");
     var sql="select * from User where name='" + name + "' and password='" + password + "'";
     rs.open(sql, conn);
-    //if(rs==null){
-       // alert("用户名为空");
-        //return false;
-    //}
      if(rs.Fields("password")==password){
         return true;
     }
@@ -507,14 +502,12 @@ function verifyUser(name,password)
 //注册验证
 function verifyrUser(name)
 {
-
     var conn = new ActiveXObject("ADODB.Connection");
     conn.Open("DBQ=D://Software//JS//PlatformGame//app//PlatformGame.mdb;DRIVER={Microsoft Access Driver (*.mdb)};");
     var rs = new ActiveXObject("ADODB.Recordset");
     var sql="select * from User where name='" + name + "'";
     rs.open(sql, conn);
-
-    if(rs.Fields("name")!==name){
+    if(rs.Fields("name")!=name){
         return true;
     }
     else{
@@ -549,23 +542,21 @@ function updateUser(name,mark)
     conn.execute(sql);
     conn.close();
     conn = null;
-    //alert("修改成功");
 }
 
-
-function displayMark()
+function displayFirst()
 {
     var conn = new ActiveXObject("ADODB.Connection");
     conn.Open("DBQ=D://Software//JS//PlatformGame//app//PlatformGame.mdb;DRIVER={Microsoft Access Driver (*.mdb)};");
     var rs = new ActiveXObject("ADODB.Recordset");
-    var sql="select * from User order by mark ASC";
+    var sql="select * from User order by mark DESC";
     rs.open(sql, conn);
     var html="";
-    var i=1;
+    var  i  =1;
     while(!rs.EOF)
     {
-        html=html+"第"+i+"名"+"&nbsp;"+rs.Fields("name")+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+rs.Fields("mark")+"分"+'<br>';
-        i = i + 1;
+        html=html+"第"+i+"名"+'<br>';
+        i=i+1;
         rs.moveNext();
 
     }
@@ -576,6 +567,73 @@ function displayMark()
     conn = null;
 }
 
+
+function displayName()
+{
+    var conn = new ActiveXObject("ADODB.Connection");
+    conn.Open("DBQ=D://Software//JS//PlatformGame//app//PlatformGame.mdb;DRIVER={Microsoft Access Driver (*.mdb)};");
+    var rs = new ActiveXObject("ADODB.Recordset");
+    var sql="select * from User order by mark DESC";
+    rs.open(sql, conn);
+    var html="";
+    while(!rs.EOF)
+    {
+        html=html+"&nbsp;&nbsp;&nbsp;&nbsp;"+rs.Fields("name")+'<br>';
+        rs.moveNext();
+
+    }
+    document.write(html);
+    rs.close();
+    rs = null;
+    conn.close();
+    conn = null;
+}
+
+function displayMark()
+{
+    var conn = new ActiveXObject("ADODB.Connection");
+    conn.Open("DBQ=D://Software//JS//PlatformGame//app//PlatformGame.mdb;DRIVER={Microsoft Access Driver (*.mdb)};");
+    var rs = new ActiveXObject("ADODB.Recordset");
+    var sql="select * from User order by mark DESC";
+    rs.open(sql, conn);
+    var html="";
+    while(!rs.EOF)
+    {
+        html=html+rs.Fields("mark")+"分"+'<br>';
+        rs.moveNext();
+
+    }
+    document.write(html);
+    rs.close();
+    rs = null;
+    conn.close();
+    conn = null;
+}
+
+/*
+function displayMark()
+{
+    var conn = new ActiveXObject("ADODB.Connection");
+    conn.Open("DBQ=D://Software//JS//PlatformGame//app//PlatformGame.mdb;DRIVER={Microsoft Access Driver (*.mdb)};");
+    var rs = new ActiveXObject("ADODB.Recordset");
+    var sql="select * from User order by mark DESC";
+    rs.open(sql, conn);
+    var html="";
+    var i=1;
+    while(!rs.EOF)
+    {
+        html=html+"第"+i+"名"+"&nbsp;"+rs.Fields("name")+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+rs.Fields("mark")+"分"+'<br>';
+        i = i + 1;
+        rs.moveNext();
+
+    }
+    document.write(html);
+    rs.close();
+    rs = null;
+    conn.close();
+    conn = null;
+}
+*/
 //access
 
 

@@ -6,6 +6,20 @@
 <link rel="stylesheet" href="css/game.css">
 
 <style>
+    body{background:#222222;}
+
+    div{
+        background:#FFC0CB;
+        width:400px;
+        word-wrap: break-word;
+        overflow: hidden;
+    }
+    .div-inline1{ float:left;}
+    .div-inline2{ float:right;}
+    .tablecenter{
+        margin: 0 auto;
+        margin-top: 80px;
+    }
     .center {
         position: fixed;
         top: 50%;
@@ -15,16 +29,21 @@
         height: 50%;
         -ms-transform: translateX(-50%) translateY(-50%);
     }
-body{ text-align:center; background:url(markback.jpg) no-repeat;background-size:cover;font-size: 30px;}
+body{ text-align:center;background-size:cover;font-size: 25px; font-style: oblique;color: #D2413A;}
 </style>
 <body>
 
-<div class="center">
-    <script>
-        displayMark();
-    </script>
-    <!--<textarea name="MSG" cols=10 rows=10></textarea>-->
-</div>
+
+
+
+<table border="1" class="tablecenter">
+    <tr>
+        <th align="left"><script>displayFirst();</script></th>
+        <th align="left"><script>displayName();</script></th>
+        <th><script>displayMark();</script></th>
+    </tr>
+</table>
+
 
 <script>
 

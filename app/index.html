@@ -2,7 +2,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <script src="code/chapter/15_game.js"></script>
 <script src="code/game_levels.js"></script>
-
+<link rel="stylesheet" href="css/text.css">
 <link rel="stylesheet" href="css/game.css">
 <!--
 <head>
@@ -11,8 +11,14 @@
 -->
 <center>
 <body>
+<div id="container">
 
-
+  <p><a href="#">
+    平台游戏
+  </a></p>
+</div>
+  <h1><font face="verdana">当前用户：</font></h1><h1 id="c"></h1>
+  <h1><font face="verdana">积分：</font></h1><h1 id="b"></h1>
 <button id="mark" onclick="changeMark()">积分排行</button>
 <button id="account" onclick="changeAccount()">账户</button>
 
@@ -21,7 +27,6 @@
 
 
 <script>
-
 
     function GetRequest() {
         var url = location.search; //获取url中"?"符后的字串
@@ -39,6 +44,13 @@
       Request = GetRequest();
       var x=Request['username'];
        //alert(x);
+    var currentuser = x;
+
+
+    document.getElementById('c').innerHTML = currentuser;
+    //alert(imark);
+    //iimark();
+
 
       //执行游戏
       runGame(GAME_LEVELS, DOMDisplay, x);
